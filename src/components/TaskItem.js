@@ -1,9 +1,21 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import * as actions from './../actions/index'
 
 class TaskItem extends Component {
 
-  onUpdateStatus = () =>{
+  onUpdateStatus = () => {
     this.props.onUpdateStatus(this.props.task.id)
+  }
+
+  onDelete = () => {
+    this.props.onDeleteTask(this.props.task.id)
+    this.props.onCloseForm()
+  }
+
+  onUpdate = () => {
+    this.props.onEditTask(this.props.task)
+    this.props.onOpenForm()
   }
 
   render() {
@@ -17,18 +29,44 @@ class TaskItem extends Component {
         </td>
         <td>
           <span
-            className={ task.status === true ? 'label label-danger' : 'label label-success' }
+            className={ task.status === true ? 'label text-success' : 'label text-danger' }
             onClick={this.onUpdateStatus}
           >
-            { task.status === true ? 'Hide' :'Active' }</span>
+            { task.status === true ? 'Active' : 'Hide' }</span>
         </td>
         <td>
-          <button type="button" className="btn btn-primary mr-2">Edit</button>
-          <button type="button" className="btn btn-danger">Delete</button>
+          <button type="button" className="btn btn-primary mr-2" onClick={this.onUpdate}>Edit</button>
+          <button type="button" className="btn btn-danger" onClick={ this.onDelete }>Delete</button>
         </td>
       </tr>
     )
   }
 }
 
-export default TaskItem
+const mapStateToProps = (state) => {
+  return {
+    itemEditting: state.itemEditting
+  }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onUpdateStatus: (id) => {
+      dispatch(actions.updateStatus(id));
+    },
+    onDeleteTask: (id) => {
+      dispatch(actions.deleteTask(id));
+    },
+    onEditTask: (task) => {
+      dispatch(actions.editTask(task));
+    },
+    onOpenForm: () => {
+      dispatch(actions.openForm())
+    },
+    onCloseForm: () => {
+      dispatch(actions.closeForm())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskItem)
