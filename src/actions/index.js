@@ -52,3 +52,17 @@ export const editTask = (task) => {
     task
   }
 }
+
+export const clearTask = (task) => {
+  return {
+    type: types.CLEAR_TASK,
+    task
+  }
+}
+
+export const filterTask = (filter) => {
+  return {
+    type: types.FILTER_TABLE,
+    filter
+  }
+}

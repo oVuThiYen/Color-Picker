@@ -31,7 +31,7 @@ var myReducer = (state = initialState, action) => {
         })
       }
       return [...state, newTask]
-      
+
     case types.UPDATE_STATUS:
       id = action.id;
       return state.map(item => {

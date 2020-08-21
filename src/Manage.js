@@ -11,10 +11,6 @@ class Manage extends Component {
     super(props);
     this.state = {
       taskEditing: null,
-      filter: {
-        name: '',
-        status: -1
-      },
       keyword: '',
       sortBy: 'name',
       sortValue: 1
@@ -29,14 +25,13 @@ class Manage extends Component {
   }
 
   onToggleForm = () => {
-    // var id = this.props.itemEditting(this.props.task.id)
-    // console.log(id)
-    // if(id) {
-    //   this.props.onOpenForm(); 
-    // } else {
-    //   this.props.onToggleForm();
-    // }
-    this.onClear();
+    var { itemEditting } = this.props
+    if(itemEditting && itemEditting.id !== '') {
+      this.props.onOpenForm();
+    } else {
+      this.props.onToggleForm();
+    }
+    this.props.onClearTask();
   }
 
   // onCloseForm = () => {
@@ -75,7 +70,7 @@ class Manage extends Component {
   //   var index = this.findIndex(id)
   //   if(index !== -1) {
   //     tasks.splice(index, 1)
-      
+
   //     this.setState({
   //       tasks: tasks
   //     })
@@ -100,15 +95,6 @@ class Manage extends Component {
     this.onShowForm()
   }
 
-  onFilter = (filterName, filterStatus) => {
-    filterStatus = parseInt(filterStatus, 10)
-    this.setState({
-      filter: {
-        name: filterName.toLowerCase(),
-        status: filterStatus
-      }
-    })
-  }
 
   onSearch = (keyword) => {
     this.setState({
@@ -125,21 +111,8 @@ class Manage extends Component {
 
   render() {
     var { taskEditing, sortBy, sortValue } = this.state
-    var { isDisplayForm, onEditTask } = this.props
-    // if(filter) {
-    //   if(filter.name) {
-    //     tasks = tasks.filter((task) => {
-    //       return task.name.toLowerCase().indexOf(filter.name) !== -1
-    //     })
-    //   }
-    //   tasks = tasks.filter((task) => {
-    //     if(filter.status === -1) {
-    //       return task
-    //     }else {
-    //       return task.status === (filter.status === 0 ? true : false)
-    //     }
-    //   })
-    // }
+    var { isDisplayForm } = this.props
+
     // if(keyword) {
     //   tasks = tasks.filter((task) => {
     //     return task.name.toLowerCase().indexOf(keyword) !== -1
@@ -158,7 +131,7 @@ class Manage extends Component {
     //     else return 0;
     //   })
     // }
-    
+
     return (
       <div className="container mt-5">
         <div className="text-center">
@@ -168,7 +141,7 @@ class Manage extends Component {
           <div className={ isDisplayForm ? 'col-4' : '' }>
             <TaskForm
               taskEditing={taskEditing}
-            /> 
+            />
           </div>
           <div className={ isDisplayForm ? 'col-8' : 'col-12' }>
             <button type="button" className="btn btn-primary" onClick={this.onToggleForm}>Add</button>
@@ -176,7 +149,6 @@ class Manage extends Component {
             <div className="row mt-3">
               <div className="col-12">
                 <TaskList
-                  // onDelete={this.onDelete}
                   onUpdate={this.onUpdate}
                   onFilter={this.onFilter}
                 />
@@ -203,12 +175,12 @@ const mapDispatchToProps = (dispatch, props) => {
     onCloseForm: () => {
       dispatch(actions.closeForm())
     },
-    onEditTask: (task) => {
-      dispatch(actions.editTask(task));
-    },
     onOpenForm: () => {
       dispatch(actions.openForm())
     },
+    onClearTask: (task) => {
+      dispatch(actions.clearTask(task))
+    }
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Manage)

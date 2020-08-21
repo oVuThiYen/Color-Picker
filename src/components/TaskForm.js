@@ -30,15 +30,8 @@ class TaskForm extends Component {
   onHandleSubmit = (e) => {
     e.preventDefault()
     this.props.onSaveTask(this.state)
-    this.onClear();
+    this.props.onClearTask();
     this.onCloseForm();
-  }
-
-  onClear = () => {
-    this.setState({
-      name: '',
-      status: false
-    })
   }
 
   componentWillMount() {
@@ -66,10 +59,13 @@ class TaskForm extends Component {
       })
     }
   }
-  
+
+  onClear = () => {
+    this.props.onClearTask();
+  }
 
   render() {
-    var { id } = this.props.onEditTask
+    var { id } = this.props.itemEditting
     if(!this.props.isDisplayForm) return null
     return (
       <div className="card">
@@ -122,6 +118,9 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onEditTask: (task) => {
       dispatch(actions.editTask(task));
+    },
+    onClearTask: (task) => {
+      dispatch(actions.clearTask(task));
     }
   }
 }
